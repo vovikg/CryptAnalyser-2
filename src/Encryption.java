@@ -32,7 +32,7 @@ public class Encryption {
             indexOfCurrentCharInAlphabet = alphabet.indexOf(c);
 
             if (indexOfCurrentCharInAlphabet != -1) {
-                indexOfEncryptedChar = (indexOfCurrentCharInAlphabet + key) % alphabet.size();
+                indexOfEncryptedChar = (indexOfCurrentCharInAlphabet + key) % (alphabet.size()-1);
 
                 encryptedChar = alphabet.get(indexOfEncryptedChar);
             } else {
@@ -80,7 +80,7 @@ public class Encryption {
 
             if (indexOfCurrentCharInAlphabet != -1) {
 
-                indexOfEncryptedChar = (indexOfCurrentCharInAlphabet - key) % alphabet.size();
+                indexOfEncryptedChar = (indexOfCurrentCharInAlphabet - key) > 0 ? (indexOfCurrentCharInAlphabet - key) % (alphabet.size()-1) : (alphabet.size()-1) + (indexOfCurrentCharInAlphabet - key);
 //                if(indexOfEncryptedChar < alphabet.size()) {
 //
 //                    encryptedChar = alphabet.get(indexOfEncryptedChar);
@@ -98,6 +98,7 @@ public class Encryption {
         writeToFile(destinationFile, decryptedTextArray);
     }
     private void alphabetFiller() {
+        alphabet.add(' ');
         alphabet.add('a');
         alphabet.add('b');
         alphabet.add('c');
@@ -124,34 +125,56 @@ public class Encryption {
         alphabet.add('x');
         alphabet.add('y');
         alphabet.add('z');
+
+        alphabet.add('A');
+        alphabet.add('B');
+        alphabet.add('C');
+        alphabet.add('D');
+        alphabet.add('E');
+        alphabet.add('F');
+        alphabet.add('G');
+        alphabet.add('H');
+        alphabet.add('I');
+        alphabet.add('J');
+        alphabet.add('K');
+        alphabet.add('L');
+        alphabet.add('M');
+        alphabet.add('N');
+        alphabet.add('O');
+        alphabet.add('P');
+        alphabet.add('Q');
+        alphabet.add('R');
+        alphabet.add('S');
+        alphabet.add('T');
+        alphabet.add('U');
+        alphabet.add('V');
+        alphabet.add('W');
+        alphabet.add('X');
+        alphabet.add('Y');
+        alphabet.add('Z');
         alphabet.add(' ');
-        alphabet.add('.');
-        alphabet.add(',');
-        alphabet.add('"');
-        alphabet.add(':');
-        alphabet.add('-');
-        alphabet.add('!');
-        alphabet.add('?');
+
 
     }
 
-    public void cryptAnalyzer(String encryptedFile, String decryptedFile){
+    public void cryptAnalyzer(String encryptedFile, String cryptAnalyserDestinationFile){
 
-        List<String> temp = Arrays.asList("the", "of", "and");
-        int key = 0;
+        List<String> temp = Arrays.asList("the",  "and", "THE","The", "AND");
+        int key = 1;
+        int counter = 0;
         for (int i = 1; i < 64; i++) {
-            int counter = 0;
-            decryption(encryptedFile, decryptedFile, i);
+
+            decryption(encryptedFile, cryptAnalyserDestinationFile, key);
             try {
-                String text = Files.readString(Path.of(decryptedFile));
+                String text = Files.readString(Path.of(encryptedFile));
                 String[] array = text.split(" ");
                 for (String word: array) {
                     if(temp.contains(word)){
                         counter++;
                     }
                 }
-                if(counter > 3){
-                    key = i;
+                if(counter > 10){
+                    key ++;
                     break;
                 }
             } catch (IOException e) {
@@ -160,9 +183,6 @@ public class Encryption {
         }
 
         System.out.println("key = "+ key);
-
-
-
 
     }
 
